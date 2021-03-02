@@ -16,29 +16,21 @@ class CoinFlipper extends Component {
 
 	handleClick(e) {
 		const newFlip = Math.floor(Math.random() * 2);
-		if (newFlip) {
-			this.setState((curState) => ({
-				heads: curState.heads + 1,
-				flip: newFlip
-			}));
-		} else {
-			this.setState((curState) => ({
-				tails: curState.tails + 1,
-				flip: newFlip
-			}));
-		}
+		this.setState((curState) => ({
+			heads: curState.heads + (newFlip ? 1 : 0),
+			tails: curState.tails + (newFlip ? 0 : 1),
+			flip: newFlip
+		}));
 	}
 
 	render() {
 		return (
 			<div>
-				<h1>Let's flip a coin!</h1>
-				<div>
-					<Coin
-						imgUrl={this.state.flip ? head : tail}
-						alt={this.state.flip ? 'head' : 'tail'}
-					/>
-				</div>
+				<h2>Let's flip a coin!</h2>
+				<Coin
+					imgUrl={this.state.flip ? head : tail}
+					alt={this.state.flip ? 'head' : 'tail'}
+				/>
 				<button onClick={this.handleClick}>FLIP ME</button>
 				<p>
 					Out of {this.state.heads + this.state.tails} flips, there
