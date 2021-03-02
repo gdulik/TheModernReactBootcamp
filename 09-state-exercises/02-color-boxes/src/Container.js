@@ -158,26 +158,35 @@ class Container extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			colors: new Array(this.props.countBoxes).fill(null)
-		};
-		this.handleClick = this.handleClick.bind(this);
-	}
-
-	componentDidMount() {
-		this.setState(() => ({
-			colors: this.state.colors.map((c) => {
+			// colors: new Array(this.props.countBoxes).fill(null)
+			colors: Array.from({ length: this.props.countBoxes }).map((c) => {
 				return this.props.colors[
 					Math.floor(Math.random() * this.props.colors.length)
 				];
 			})
-		}));
+		};
+		this.handleClick = this.handleClick.bind(this);
 	}
+
+	// componentDidMount() {
+	// 	this.setState(() => ({
+	// 		colors: this.state.colors.map((c) => {
+	// 			return this.props.colors[
+	// 				Math.floor(Math.random() * this.props.colors.length)
+	// 			];
+	// 		})
+	// 	}));
+	// }
 
 	handleClick(e) {
 		const newColors = [ ...this.state.colors ];
-		newColors[e.target.id] = this.props.colors[
-			Math.floor(Math.random() * this.props.colors.length)
-		];
+		let newColor;
+		do {
+			newColor = this.props.colors[
+				Math.floor(Math.random() * this.props.colors.length)
+			];
+		} while (newColors[e.target.id] === newColor);
+		newColors[e.target.id] = newColor;
 		this.setState({
 			colors: newColors
 		});
