@@ -43,6 +43,7 @@ class Board extends Component {
 			board: this.createBoard(),
 			hasWon: false
 		};
+		this.flipCellsAround = this.flipCellsAround.bind(this);
 	}
 
 	/** create a board nrows high/ncols wide, each cell randomly lit or unlit */
@@ -54,8 +55,7 @@ class Board extends Component {
 		// TODO: create array-of-arrays of true/false values
 		for (let i = 0; i < this.props.nrows; i++) {
 			for (let j = 0; j < this.props.ncols; j++) {
-				console.log(board[i][j], i, j);
-				board[i][j] = Math.random() < 0.3 ? true : false;
+				board[i][j] = Math.random() < this.props.chanceLightStartsOn;
 			}
 		}
 		return board;
@@ -77,29 +77,56 @@ class Board extends Component {
 		}
 
 		// TODO: flip this cell and the cells around it
-
+		flipCell(y, x);
+		flipCell(y - 1, x);
+		flipCell(y + 1, x);
+		flipCell(y, x - 1);
+		flipCell(y, x + 1);
 		// win when every cell is turned off
 		// TODO: determine is the game has been won
-		let hasWon = false;
-		if (board[y][x] === false) {
-			hasWon = true;
-		}
+		let hasWon = board.every((row) => row.every((cell) => !cell));
 		this.setState({ board, hasWon });
 	}
 
 	/** Render game board or winning message. */
 
 	render() {
-		let gameBoard = this.state.board.map((row) => (
-			<tr>{row.map((cell) => <Cell isLit={cell} />)}</tr>
+		let gameBoard = this.state.board.map((row, rIdx) => (
+			<tr key={rIdx}>
+				{row.map((cell, cIdx) => (
+					<Cell
+						key={`${rIdx}-${cIdx}`}
+						isLit={cell}
+						coord={`${rIdx}-${cIdx}`}
+						flipCellsAroundMe={this.flipCellsAround}
+					/>
+				))}
+			</tr>
 		));
+		// if the game is won, just show a winning msg & render nothing else
+		// TODO
+		// make table board
+		// TODO
 		return (
 			<div>
-				Board // if the game is won, just show a winning msg & render
-				nothing else // TODO // make table board // TODO
-				<table className="Board">
-					<tbody>{gameBoard}</tbody>
-				</table>
+				{this.state.hasWon ? (
+					<div className="Board-title">
+						<h1 className="winner">
+							<span className="neon-orange">YOU</span>
+							<span className="neon-blue">WIN!</span>
+						</h1>
+					</div>
+				) : (
+					<div>
+						<h1 className="Board-title">
+							<span className="neon-orange">Lights</span>
+							<span className="neon-blue">Out</span>
+						</h1>
+						<table className="Board">
+							<tbody>{gameBoard}</tbody>
+						</table>
+					</div>
+				)}
 			</div>
 		);
 	}
