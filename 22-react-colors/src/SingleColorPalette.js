@@ -1,14 +1,24 @@
 import React, { Component } from 'react';
 import ColorBox from './ColorBox';
+import Navbar from './Navbar';
+import PaletteFooter from './PaletteFooter';
+import { Link } from 'react-router-dom';
 
 export default class SingleColorPalette extends Component {
 	constructor(props) {
 		super(props);
+		this.state = {
+			format: 'hex'
+		};
 		this._shades = this.gatherShades(
 			this.props.palette,
 			this.props.colorId
 		);
-		console.log(this._shades);
+		this.changeFormat = this.changeFormat.bind(this);
+	}
+
+	changeFormat(format) {
+		this.setState({ format });
 	}
 
 	gatherShades(palette, colorToFilterBy) {
@@ -22,18 +32,31 @@ export default class SingleColorPalette extends Component {
 		return shades.slice(1);
 	}
 	render() {
+		const { format } = this.state;
+		const { paletteName, emoji, id } = this.props.palette;
 		const colorBoxes = this._shades.map((color) => (
 			<ColorBox
-				key={color.id}
+				key={color.name}
 				name={color.name}
-				background={color.hex}
-				showLink={false}
+				background={color[format]}
+				showingFullPalette={false}
 			/>
 		));
 		return (
-			<div className="Palette">
-				<h1>Single Color Palette</h1>
-				<div className="Palette-colors">{colorBoxes}</div>
+			<div className="SingleColorPalette Palette">
+				<Navbar
+					handleChange={this.changeFormat}
+					showingAllColors={false}
+				/>
+				<div className="Palette-colors">
+					{colorBoxes}
+					<div className="go-back ColorBox">
+						<Link to={`/palette/${id}`} className="back-button">
+							Go back
+						</Link>
+					</div>
+				</div>
+				<PaletteFooter paletteName={paletteName} emoji={emoji} />
 			</div>
 		);
 	}
