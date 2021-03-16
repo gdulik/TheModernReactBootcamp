@@ -17,7 +17,17 @@ const styles = {
 		display: 'flex',
 		width: '100%',
 		justifyContent: 'space-between',
-		color: 'white'
+		color: '#fff',
+		alignItems: 'center',
+		'& a': {
+			color: '#fff',
+			textDecoration: 'none',
+			transition: 'all 0.2s ease-in',
+			borderBottom: '2px solid transparent',
+			'&:hover': {
+				borderBottom: '2px solid #fff'
+			}
+		}
 	},
 	palettes: {
 		boxSizing: 'border-box',
