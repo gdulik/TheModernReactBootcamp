@@ -7,11 +7,12 @@ import Divider from '@material-ui/core/Divider';
 import IconButton from '@material-ui/core/IconButton';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import Button from '@material-ui/core/Button';
-import DraggableColorList from './DraggableColorList';
 import arrayMove from 'array-move';
+import DraggableColorList from './DraggableColorList';
 import PaletteFormNav from './PaletteFormNav';
 import ColorPickerForm from './ColorPickerForm';
 import styles from './styles/NewPaletteFormStyles';
+import seedColors from './seedColors';
 
 class NewPaletteForm extends Component {
 	static defaultProps = {
@@ -21,7 +22,7 @@ class NewPaletteForm extends Component {
 		super(props);
 		this.state = {
 			open: true,
-			colors: this.props.palettes[0].colors
+			colors: seedColors[0].colors
 		};
 		this.handleDrawerOpen = this.handleDrawerOpen.bind(this);
 		this.handleDrawerClose = this.handleDrawerClose.bind(this);
@@ -79,7 +80,17 @@ class NewPaletteForm extends Component {
 	addRandomColor() {
 		const allColors = this.props.palettes.map((p) => p.colors).flat();
 		let rand = Math.floor(Math.random() * allColors.length);
-		this.setState({ colors: [ ...this.state.colors, allColors[rand] ] });
+		let randomColor = allColors[rand];
+		let isDuplicateColor = true;
+		while (isDuplicateColor) {
+			rand = Math.floor(Math.random() * allColors.length);
+			randomColor = allColors[rand];
+			isDuplicateColor = this.state.colors.some(
+				// eslint-disable-next-line
+				(color) => color.name === randomColor.name
+			);
+		}
+		this.setState({ colors: [ ...this.state.colors, randomColor ] });
 	}
 
 	render() {
