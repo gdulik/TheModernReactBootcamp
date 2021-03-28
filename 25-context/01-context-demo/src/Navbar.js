@@ -8,13 +8,19 @@ import SearchIcon from '@material-ui/icons/Search';
 import Switch from '@material-ui/core/Switch';
 import { withStyles } from '@material-ui/core/styles';
 import styles from './styles/NavbarStyles';
+import { ThemeContext } from './contexts/ThemeContext';
 
 class Navbar extends Component {
+	static contextType = ThemeContext;
 	render() {
+		const { isDarkMode, toggleTheme } = this.context;
 		const { classes } = this.props;
 		return (
 			<div className={classes.root}>
-				<AppBar position="static" color="primary">
+				<AppBar
+					position="static"
+					color={isDarkMode ? 'default' : 'primary'}
+				>
 					<Toolbar>
 						<IconButton
 							className={classes.menuButton}
@@ -29,7 +35,7 @@ class Navbar extends Component {
 						>
 							App Title
 						</Typography>
-						<Switch />
+						<Switch onChange={toggleTheme} />
 						<div className={classes.grow} />
 						<div className={classes.search}>
 							<div className={classes.searchIcon}>
